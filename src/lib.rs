@@ -3,17 +3,17 @@ use dioxus_signals::use_signal;
 use dioxus_signals::Signal;
 use dioxus_use_mounted::UseMounted;
 use js_sys::Array;
-use web_sys::DomRectReadOnly;
 use std::rc::Rc;
 use wasm_bindgen::closure::Closure;
 use wasm_bindgen::JsCast;
+use web_sys::DomRectReadOnly;
 use web_sys::ResizeObserver;
 use web_sys::ResizeObserverEntry;
 
 pub type Rect = DomRectReadOnly;
 
 /// Hook to get an element's size, updating on changes.
-/// 
+///
 /// ## Examples
 /// ```
 /// use dioxus::prelude::*;
@@ -33,7 +33,9 @@ pub type Rect = DomRectReadOnly;
 pub fn use_size<T>(cx: Scope<T>, mounted: UseMounted) -> Rect {
     let resize = use_resize(cx, mounted);
     let resize_ref = resize.read();
-    resize_ref.clone().unwrap_or_else(|| DomRectReadOnly::new().unwrap())
+    resize_ref
+        .clone()
+        .unwrap_or_else(|| DomRectReadOnly::new().unwrap())
 }
 
 /// Hook to get an element's resize events as a signal.
@@ -61,7 +63,7 @@ pub fn use_resize<T>(cx: Scope<T>, mounted: UseMounted) -> Signal<Option<Rect>> 
             // Update the current state.
             state_ref.set(Some(State {
                 resize_observer,
-                mounted,
+                mounted: mounted.into(),
                 _on_resize: on_resize,
             }));
         } else {
